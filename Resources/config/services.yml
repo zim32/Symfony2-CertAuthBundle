@@ -1,0 +1,35 @@
+services:
+
+    zim_cert_auth.access_denied_handler:
+        arguments: [@router]
+        class: Zim\CertAuthBundle\Firewall\AccessDeniedHandler
+
+    zim_cert_auth.certificate_generator:
+        class: Zim\CertAuthBundle\CertificateGenerator
+        arguments: [~,~,@event_dispatcher]
+
+    zim_cert_auth.certificate_storage:
+        class: Zim\CertAuthBundle\Storage\CertificateStorage
+        arguments: [~, ~]
+
+    zim_cert_auth.certificate_storage.formatter.pkcs12:
+        class: Zim\CertAuthBundle\Storage\Formatter\PKCS12Formatter
+        factory: [Zim\CertAuthBundle\Storage\Formatter\PKCS12FormatterFactory, createFormatter]
+        arguments: [~]
+        public: false
+
+    zim_cert_auth.certificate_storage.persister.localfs:
+        class: Zim\CertAuthBundle\Storage\Persister\LocalFilesystemPersister
+        arguments: [~]
+        public: false
+
+    zim_cert_auth.security.authentication.listener:
+        class: Zim\CertAuthBundle\Firewall\CertificateAuthenticationListener
+        arguments: [@security.token_storage, ~, @security.authorization_checker, ~, @logger, @zim_cert_auth.security.certificate_expression_validator]
+        public: false
+        tags:
+            - { name: monolog.logger, channel: security }
+
+    zim_cert_auth.security.certificate_expression_validator:
+        class: Zim\CertAuthBundle\CertificateExpressionValidator
+        arguments: [@request_stack, @security.token_storage]

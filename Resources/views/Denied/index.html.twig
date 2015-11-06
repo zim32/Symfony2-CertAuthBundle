@@ -1,0 +1,7 @@
+{% extends "ZimCertAuthBundle:Denied:layout.html.twig" %}
+{% block body %}
+    <form method="POST">
+        <input type="password" name="password" placeholder="Security Password"/>
+        <button type="submit">Generate Certificate</button>
+    </form>
+{% endblock body %}

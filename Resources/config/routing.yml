@@ -1,0 +1,7 @@
+zim_cert_auth_denied_index:
+    path:     /denied
+    defaults: { _controller: ZimCertAuthBundle:AccessDenied:index }
+
+zim_cert_auth_denied_restore:
+    path:     /denied/resore
+    defaults: { _controller: ZimCertAuthBundle:AccessDenied:restore }

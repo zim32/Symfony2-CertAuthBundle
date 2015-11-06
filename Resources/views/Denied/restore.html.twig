@@ -1,0 +1,13 @@
+{% extends "ZimCertAuthBundle:Denied:layout.html.twig" %}
+{% block body %}
+    {% if error %}
+        {{ error }}
+    {% endif %}
+
+    <p>Don't you forget to install certificate into the browser?</p>
+
+    <form method="POST">
+        <input type="password" name="password" placeholder="Restore Password"/>
+        <button type="submit">Restore Certificate</button>
+    </form>
+{% endblock body %}
