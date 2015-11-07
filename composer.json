@@ -1,0 +1,13 @@
+{
+    "name": "zim32/cert-auth-bundle",
+    "description": "Two-factor x509 certificate authentication",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "zim32",
+            "email": "yurij.uvarov@gmail.com"
+        }
+    ],
+    "minimum-stability": "alpha",
+    "require": {}
+}

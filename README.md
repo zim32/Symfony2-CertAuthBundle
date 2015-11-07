@@ -61,6 +61,27 @@ openssl genrsa -des3 -out private.pem 4096
 openssl req -new -x509 -key private.pem -out CA.crt -days 365
 chmod a-rwx * && chmod u+r *
 ```
+**Modify nginx config. Add lines in your server section:**
+```
+# /etc/nginx/sites-available/yoursite.conf
+server {
+...
+ssl_verify_client optional;
+ssl_trusted_certificate /home/zim32/www/app/app/cert/CA.crt;
+...
+}
+```
+**For PHP-FPM use:**
+```
+fastcgi_param   CLIENT_CERT         $ssl_client_raw_cert;
+fastcgi_param   CLIENT_CERT_OK      $ssl_client_verify;
+
+```
+**For proxy pass use:**
+```
+proxy_set_header    CLIENT_CERT         $ssl_client_raw_cert;
+proxy_set_header    CLIENT_CERT_OK      $ssl_client_verify;
+```
 **Add directory to store generated client's certificates**
 ```bash
 mkdir /{your_app_root}/cert/clients
