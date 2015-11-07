@@ -67,7 +67,7 @@ chmod a-rwx * && chmod u+r *
 server {
 ...
 ssl_verify_client optional;
-ssl_trusted_certificate /home/zim32/www/app/app/cert/CA.crt;
+ssl_trusted_certificate /{your_app_root}/cert/CA.crt;
 ...
 }
 ```
