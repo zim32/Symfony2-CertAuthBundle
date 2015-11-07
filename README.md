@@ -15,7 +15,7 @@ Basic features:
 How it works?
 -------------
   - User is logged in as usual
-  - User is redirected to deny page
+  - User is redirected to DENY page
   - User enters his secure word and click generate certificate
   - Generated certificate is stored on server (localfs, db, {your_custom_storage})
   - User downloads certificate and installs it into the browser
