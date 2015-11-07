@@ -77,6 +77,10 @@ class CertificateStorage implements CertificateStorageInterface
      */
     public function store(CertificateItem $item, $identity, $password)
     {
+        if($this->has($identity)){
+            return $this->load($identity, $password);
+        }
+
         $result = new CertificateStorageItem();
         $result->setIdentity($identity);
         $result->setPassword($password);
