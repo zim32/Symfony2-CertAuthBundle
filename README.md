@@ -33,7 +33,7 @@ Certificates are protected by password and even your admin can not view it's con
 Installation
 ------------
 
-**Download wia composer**
+**Download via composer**
 ```bash
 composer require zim/certauthbundle
 ```
@@ -100,3 +100,13 @@ firewalls:
         - { path: ^/cert/denied, role: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, allow_if: "'ROLE_ADMIN' in roles and 'ROLE_CERT_AUTHENTICATED_FULLY' in roles" }
 ```
+Customize
+=========
+This bundle has only three templates 
+ - Resources/views/Denied/layout.html.twig
+ - Resources/views/Denied/index.html.twig
+ - Resources/views/Denied/restore.html.twig
+
+Override them using [Symfony Override Templates](http://symfony.com/doc/current/book/templating.html#overriding-bundle-templates) technique to add f.e. instructions how to install certificate into the browser.
+
+Override *Controller/AccessDeniedController* if you need some custom logic.
