@@ -54,13 +54,13 @@ class ZimCertAuthExtension extends Extension
         // formatter
         $serviceId = $config['cert_storage_formatter']['id'];
         $serviceDef = $container->getDefinition($serviceId);
-        $serviceDef->setArguments([$config['cert_storage_formatter']['options']]);
+        $serviceDef->replaceArgument(0, $config['cert_storage_formatter']['options']);
         $storageId->replaceArgument(0, new Reference($serviceId));
 
         // persister
         $serviceId = $config['cert_storage_persister']['id'];
         $serviceDef = $container->getDefinition($serviceId);
-        $serviceDef->setArguments([$config['cert_storage_persister']['options']]);
+        $serviceDef->replaceArgument(0, $config['cert_storage_persister']['options']);
         $storageId->replaceArgument(1, new Reference($serviceId));
     }
 }

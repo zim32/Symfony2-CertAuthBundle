@@ -23,6 +23,11 @@ services:
         arguments: [~]
         public: false
 
+    zim_cert_auth.certificate_storage.persister.orm:
+        class: Zim\CertAuthBundle\Storage\Persister\ORMPersister
+        arguments: [~, @doctrine.orm.entity_manager, @security.token_storage]
+        public: false
+
     zim_cert_auth.security.authentication.listener:
         class: Zim\CertAuthBundle\Firewall\CertificateAuthenticationListener
         arguments: [@security.token_storage, ~, @security.authorization_checker, ~, @logger, @zim_cert_auth.security.certificate_expression_validator]
