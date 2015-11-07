@@ -29,3 +29,74 @@ What if user go to another computer?
  - User enters his secure word and download certificate again
 
 Certificates are protected by password and even your admin can not view it's content.
+
+Installation
+------------
+
+**Download wia composer**
+```bash
+composer require zim/certauthbundle
+```
+**Add bundle to your Kernel**
+```php
+# app/AppKernel.php
+$bundles = array(
+...
+    new Zim\CertAuthBundle\ZimCertAuthBundle(),
+...
+ );
+```
+**Import routes**
+```yml
+# app/config/routing.yml
+zim_cert_auth:
+    resource: "@ZimCertAuthBundle/Resources/config/routing.yml"
+    prefix:   /cert
+```
+**Generate youe CA certificate (if you don't have one)**
+```bash
+mkdir /{your_app_root}/cert
+cd /{your_app_root}/cert
+openssl genrsa -des3 -out private.pem 4096
+openssl req -new -x509 -key private.pem -out CA.crt -days 365
+chmod a-rwx * && chmod u+r *
+```
+**Add directory to store generated client's certificates**
+```bash
+mkdir /{your_app_root}/cert/clients
+```
+**Add bundle configuration**
+```yml
+# app/config/config.yml
+...
+zim_cert_auth:
+    ca_path: %kernel.root_dir%/cert/CA.crt
+    ca_key_path: %kernel.root_dir%/cert/private.pem
+    ca_key_password: my_des3_password
+    client_csr_options:
+        countryName: UA
+        organizationName: YOUR ORGANIZATION NAME Limited
+    cert_content_server_var: MY_CLIENT_CERT
+    cert_storage_formatter:
+        id: zim_cert_auth.certificate_storage.formatter.pkcs12
+        options: []
+    cert_storage_persister:
+        id: zim_cert_auth.certificate_storage.persister.localfs
+        options:
+            rootDir: %kernel.root_dir%/cert/clients
+```
+**Modify security config**
+```yml
+# app/config/security.yml
+firewalls:
+    firewallname:
+        ...
+        pattern: ^/admin
+        access_denied_handler: zim_cert_auth.access_denied_handler
+        zim_cert: ~
+        ...
+    access_control:
+        ...
+        - { path: ^/cert/denied, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/admin, allow_if: "'ROLE_ADMIN' in roles and 'ROLE_CERT_AUTHENTICATED_FULLY' in roles" }
+```
