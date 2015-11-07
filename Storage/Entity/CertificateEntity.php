@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ * @ORM\Table(indexes={@ORM\Index(name="identity_idx", columns={"identity"})})
  */
 class CertificateEntity
 {
