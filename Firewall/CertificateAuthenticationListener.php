@@ -58,6 +58,11 @@ class CertificateAuthenticationListener implements ListenerInterface
         $x509 = trim($request->server->get($this->envCertificateContent));
         if (!$x509) {
             $this->logger->debug('Client certificate is not provided.');
+            /*
+             * setting setAuthenticated(false) will fallback to DaoAuthenticator which will
+             * reload user from database and reload actual user roles, removing
+             * dynamic ROLE_CERT_AUTHENTICATED_FULLY
+             */
             $token->setAuthenticated(false);
 
             return;
