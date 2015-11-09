@@ -31,9 +31,16 @@ What if user go to another computer?
  - User enters his secure word and download certificate again
 
 Certificates are protected by password and even your admin can not view it's content.
+## Contents
+###### [Installation](#installation)
+###### [Customize](#customize)
+###### [Run Tests](#run-tests)
+###### [Using Command Line](#using-command-line)
+###### [How to add custom fields](#how-to-add-custom-fields)
+##
+##
 
-Installation
-------------
+## Installation
 
 **Download via composer**
 ```bash
@@ -134,8 +141,8 @@ firewalls:
         - { path: ^/cert/denied, role: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, allow_if: "'ROLE_ADMIN' in roles and 'ROLE_CERT_AUTHENTICATED_FULLY' in roles" }
 ```
-Customize
-=========
+## Customize
+
 This bundle has only three templates 
  - Resources/views/Denied/layout.html.twig
  - Resources/views/Denied/index.html.twig
@@ -147,21 +154,21 @@ Override *Controller/AccessDeniedController* if you need some custom logic.
 
 Change persister to store client certificates other way then localfs (f.e. in database).
 
-Run Tests
-=========
+## Run Tests
+
 ```bash
 cd /{your_project_root} && KERNEL_DIR=./app ./bin/phpunit vendor/zim32/cert-auth-bundle/Tests/
 ```
 
-Using command line
-==================
+## Using command line
+
 You can dump client certificates and private keys using 
 ```bash
 app/console zim:cert:dump -p {secure_word} {identity}
 ```
 
-How to add custom fields?
-========================
+## How to add custom fields
+
 Suppose you want to add ipAddress field to your client certificates equal to current client IP and then
 deny access based on this field. 
 You should do several simple steps:
