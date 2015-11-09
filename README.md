@@ -152,3 +152,74 @@ Run Tests
 ```bash
 cd /{your_project_root} && KERNEL_DIR=./app ./bin/phpunit vendor/zim32/cert-auth-bundle/Tests/
 ```
+
+Using command line
+==================
+You can dump client certificates and private keys using 
+```bash
+app/console zim:cert:dump -p {secure_word} {identity}
+```
+
+How to add custom fields?
+========================
+Suppose you want to add ipAddress field to your client certificates equal to current client IP and then
+deny access based on this field. 
+You should do several simple steps:
+ - Find free OID in [registry](http://www.alvestrand.no/objectid/1.3.6.1.4.1.html) to prevent conflicts 
+ - Add custom OID to your openssl configuration file
+ - Add event listener to add ipAddress field to client certificate
+ - Add custom expression to validate this field
+
+##### Step #1
+For example you choose your company OID section be 1.3.6.1.4.1.77777. So your ipAddress field OID should be something like 1.3.6.1.4.1.77777.1
+Open your openssl config file, find [new_oids] section and add the following line
+```
+[new_oid]
+...
+ipAddress = 1.3.6.1.4.1.77777.1
+```
+##### Step #2
+Add zim_cert.modify_csr event listener
+```yml
+app.listener_modify_csr:
+    class: AppBundle\EventListener\ModifyCSREventListener
+    arguments: [@request_stack]
+    tags:
+      - { name: kernel.event_listener, event: zim_cert.modify_csr, method: handle }
+```
+##### Step #3
+Create event listener
+```php
+<?php
+
+namespace AppBundle\EventListener;
+
+use Symfony\Component\HttpFoundation\RequestStack;
+use Zim\CertAuthBundle\Event\ModifyClientCSREvent;
+
+class ModifyCSREventListener
+{
+
+    protected $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
+    public function handle(ModifyClientCSREvent $event)
+    {
+        $event->dn['ipAddress'] = $this->requestStack->getCurrentRequest()->getClientIp();
+    }
+
+}
+```
+##### Step #4
+From now on you are able to use Symfony Expression Language to deny access based on this field.
+Modify your config.yml:
+```yml
+zim_cert_auth:
+    ...
+    cert_validation_expression: cert["subject"]["CN"] == token.getUserName() && cert["subject"]["ipAddress"] == request.getClientIp() && request.server.get("CLIENT_CERT_OK") === "SUCCESS"
+```
+That's all.
