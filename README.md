@@ -34,6 +34,7 @@ Certificates are protected by password and even your admin can not view it's con
 ## Contents
 [Installation](#installation)<br/>
 [Customize](#customize)<br/>
+[Disable automatic certificate recovery](#disable-automatic-certificate-recovery)<br />
 [Run Tests](#run-tests)<br/>
 [Using Command Line](#using-command-line)<br/>
 [How to add custom fields](#how-to-add-custom-fields)<br/>
@@ -152,7 +153,13 @@ Override them using [Symfony Override Templates](http://symfony.com/doc/current/
 Override *Controller/AccessDeniedController* if you need some custom logic.
 
 Change persister to store client certificates other way then localfs (f.e. in database).
-
+## Disable automatic certificate recovery
+If you want to disable certificate automatic recovery, just add this to config.yml file:
+```yml
+zim_cert_auth:
+    ...
+    disable_cert_restore: true
+```
 ## Run Tests
 
 ```bash
