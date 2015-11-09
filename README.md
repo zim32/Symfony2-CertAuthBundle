@@ -171,10 +171,10 @@ You should do several simple steps:
  - Add custom expression to validate this field
 
 ##### Step #1
-For example you choose your company OID section be 1.3.6.1.4.1.77777. So your ipAddress field OID should be something like 1.3.6.1.4.1.77777.1
+For example you choose your company OID section to be 1.3.6.1.4.1.77777. So your ipAddress field OID should be something like 1.3.6.1.4.1.77777.1
 Open your openssl config file, find [new_oids] section and add the following line
 ```
-[new_oid]
+[new_oids]
 ...
 ipAddress = 1.3.6.1.4.1.77777.1
 ```
