@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
@@ -28,7 +28,7 @@ class CertificateAuthenticationListener implements ListenerInterface
     public function __construct(
         TokenStorageInterface $tokenStorage,
         UserProviderInterface $userProvider,
-        AuthorizationChecker $authChecker,
+        AuthorizationCheckerInterface $authChecker,
         $providerKey,
         LoggerInterface $logger,
         CertificateExpressionValidator $expValidator

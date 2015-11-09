@@ -10,7 +10,11 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\InMemoryUserProvider;
+use Symfony\Component\Security\Core\User\User;
+use Zim\CertAuthBundle\CertificateExpressionValidator;
 use Zim\CertAuthBundle\Firewall\CertificateAuthenticationListener;
+use Zim\CertAuthBundle\Security\Authentication\CertifiedUserToken;
+use Zim\CertAuthBundle\Tests\Mocks\TestAuthenticationChecker;
 
 class FirewallListenerTest extends KernelTestCase
 {
@@ -21,6 +25,13 @@ class FirewallListenerTest extends KernelTestCase
     protected $tokenStorage;
     protected $userProvider;
     protected $authChecker;
+    /**
+     * @var CertificateExpressionValidator
+     */
+    protected $expressionValidator;
+    /**
+     * @var CertificateAuthenticationListener
+     */
     protected $authListener;
 
     public function setUp()
@@ -29,14 +40,13 @@ class FirewallListenerTest extends KernelTestCase
 
         $tokenStorage =  self::$kernel->getContainer()->get('security.token_storage');
 
-        $userProvider = new InMemoryUserProvider();
+        $users = array(
+            'zim32' => array('password'=>'password', 'enabled'=>true, 'roles'=>array('ROLE_ADMIN'))
+        );
+        $userProvider = new InMemoryUserProvider($users);
 
-        $authChecker = $this
-            ->getMockBuilder('Symfony\Component\Security\Core\Authorization\AuthorizationChecker')
-            ->disableOriginalConstructor()
-            ->disableProxyingToOriginalMethods()
-            ->getMock()
-        ;
+
+        $this->authChecker = new TestAuthenticationChecker();
 
         $logger = $this
             ->getMockBuilder('Symfony\Bridge\Monolog\Logger')
@@ -46,9 +56,9 @@ class FirewallListenerTest extends KernelTestCase
         ;
 
         $this->tokenStorage = $tokenStorage;
-        $expressionValidator = self::$kernel->getContainer()->get('zim_cert_auth.security.certificate_expression_validator');
+        $this->expressionValidator = self::$kernel->getContainer()->get('zim_cert_auth.security.certificate_expression_validator');
 
-        $this->authListener = new CertificateAuthenticationListener($tokenStorage, $userProvider, $authChecker, 'main', $logger, $expressionValidator);
+        $this->authListener = new CertificateAuthenticationListener($tokenStorage, $userProvider, $this->authChecker, 'main', $logger, $this->expressionValidator);
 
     }
 
@@ -99,6 +109,46 @@ class FirewallListenerTest extends KernelTestCase
         $this->authListener->handle($event);
         $this->assertEquals(false, $token->isAuthenticated(), 'Token must not be authenticated after listener handle method');
         if(!($this->tokenStorage->getToken() instanceof UsernamePasswordToken)){
+            $this->fail('Wrong token type after handle method');
+        }
+    }
+
+    public function testExpressionValidation()
+    {
+        $x509 = file_get_contents(__DIR__.'/Fixtures/test.crt');
+        $request = new Request();
+        $request->server->set('CLIENT_CERT', $x509);
+        $request->server->set('CLIENT_CERT_OK', 'SUCCESS');
+        $this->authListener->setEnvCertificateContent('CLIENT_CERT');
+        $this->expressionValidator->setExpression('cert["subject"]["CN"] == token.getUserName()');
+
+        $event = new GetResponseEvent(self::$kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $token = new UsernamePasswordToken('fake_user', 'password', 'main', ['ROLE_ADMIN']);
+        $this->tokenStorage->setToken($token);
+
+        $this->authListener->handle($event);
+        $this->assertEquals(false, $token->isAuthenticated(), 'Token must not be authenticated after listener handle method');
+        if(!($this->tokenStorage->getToken() instanceof UsernamePasswordToken)){
+            $this->fail('Wrong token type after handle method');
+        }
+    }
+
+    public function testSuccessAuthentication()
+    {
+        $x509 = file_get_contents(__DIR__.'/Fixtures/test.crt');
+        $request = new Request();
+        $request->server->set('CLIENT_CERT', $x509);
+        $request->server->set('CLIENT_CERT_OK', 'SUCCESS');
+        $this->authListener->setEnvCertificateContent('CLIENT_CERT');
+        $this->expressionValidator->setExpression('cert["subject"]["CN"] == token.getUserName()');
+
+        $event = new GetResponseEvent(self::$kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $token = new UsernamePasswordToken('zim32', 'password', 'main', ['ROLE_ADMIN']);
+        $this->tokenStorage->setToken($token);
+
+        $this->authListener->handle($event);
+        $this->assertEquals(true, $token->isAuthenticated(), 'Token must be authenticated after listener handle method');
+        if(!($this->tokenStorage->getToken() instanceof CertifiedUserToken)){
             $this->fail('Wrong token type after handle method');
         }
     }
