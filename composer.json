@@ -9,5 +9,10 @@
         }
     ],
     "minimum-stability": "alpha",
-    "require": {}
+    "require": {
+        "php" : ">=5.4.0",
+        "symfony/symfony" : "~2.7",
+        "ext-openssl" : "*",
+        "lib-openssl" : "*"
+    }
 }
