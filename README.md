@@ -37,7 +37,7 @@ Installation
 
 **Download via composer**
 ```bash
-composer require zim/certauthbundle
+composer require zim32/cert-auth-bundle
 ```
 **Add bundle to your Kernel**
 ```php
