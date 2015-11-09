@@ -1,6 +1,9 @@
 {
     "name": "zim32/cert-auth-bundle",
     "description": "Two-factor x509 certificate authentication",
+    "keywords": ["x509", "authentication"],
+    "homepage": "https://github.com/zim32/Symfony2-CertAuthBundle",
+    "license": "MIT",
     "type": "symfony-bundle",
     "authors": [
         {
