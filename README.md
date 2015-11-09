@@ -146,3 +146,9 @@ Override them using [Symfony Override Templates](http://symfony.com/doc/current/
 Override *Controller/AccessDeniedController* if you need some custom logic.
 
 Change persister to store client certificates other way then localfs (f.e. in database).
+
+Run Tests
+=========
+```bash
+cd /{your_project_root} && KERNEL_DIR=./app ./bin/phpunit vendor/zim32/cert-auth-bundle/Tests/
+```
