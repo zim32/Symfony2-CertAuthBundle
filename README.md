@@ -20,6 +20,8 @@ How it works?
   - Generated certificate is stored on server (localfs, db, {your_custom_storage})
   - User downloads certificate and installs it into the browser
   - User refreshes page and get into admin interface
+  - Your frontend server stack validates user certificate and pass several SERVER variables to backend
+  - Bundle checks this variables to grant or deny access
   
 What if user go to another computer?
 ------------------------------------
@@ -71,6 +73,17 @@ ssl_trusted_certificate /{your_app_root}/cert/CA.crt;
 ...
 }
 ```
+Depenging on version of nginx you should add **ssl_client_certificate /{your_app_root}/cert/CA.crt;** instead of ssl_trusted_certificate, but this is not recommended option, consider updating your nginx server.
+
+**Modify your openssl config file**
+
+This bundle uses custom openssl extension section called **zim_usr_cert** to prevent different conflicts with your existing configurations. So add this to the end of your openss config file (on Debian /etc/ssl/openssl.cnf):
+```
+[zim_usr_cert]
+basicConstraints=critical,CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+```
+
 **For PHP-FPM use:**
 ```
 fastcgi_param   CLIENT_CERT         $ssl_client_raw_cert;
@@ -97,7 +110,7 @@ zim_cert_auth:
     client_csr_options:
         countryName: UA
         organizationName: YOUR ORGANIZATION NAME Limited
-    cert_content_server_var: MY_CLIENT_CERT
+    cert_content_server_var: CLIENT_CERT
     cert_storage_formatter:
         id: zim_cert_auth.certificate_storage.formatter.pkcs12
         options: []
@@ -131,3 +144,5 @@ This bundle has only three templates
 Override them using [Symfony Override Templates](http://symfony.com/doc/current/book/templating.html#overriding-bundle-templates) technique to add f.e. instructions how to install certificate into the browser.
 
 Override *Controller/AccessDeniedController* if you need some custom logic.
+
+Change persister to store client certificates other way then localfs (f.e. in database).
