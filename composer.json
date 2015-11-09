@@ -14,5 +14,10 @@
         "symfony/symfony" : "~2.7",
         "ext-openssl" : "*",
         "lib-openssl" : "*"
+    },
+    "autoload" : {
+        "psr-4" : {
+            "Zim\\CertAuthBundle" : ""
+        }
     }
 }
