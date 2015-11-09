@@ -23,5 +23,12 @@ interface CertificatePersisterInterface
      */
     public function load(CertificateStorageItem $item);
 
+    /**
+     * @param $identity
+     * @return bool
+     * @throws CertificateNotFoundException
+     */
+    public function remove($identity);
+
 
 }

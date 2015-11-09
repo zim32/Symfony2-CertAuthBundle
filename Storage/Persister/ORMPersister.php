@@ -65,4 +65,21 @@ class ORMPersister implements CertificatePersisterInterface
             throw new CertificateNotFoundException;
         }
     }
+
+    /**
+     * @param $identity
+     * @return bool
+     * @throws CertificateNotFoundException
+     */
+    public function remove($identity)
+    {
+        $entity = $this->em->getRepository('Zim\CertAuthBundle\Storage\Entity\CertificateEntity')->findOneBy(['identity'=>$identity]);
+        if(!$entity){
+            throw new CertificateNotFoundException;
+        }
+
+        $this->em->remove($entity);
+        $this->em->flush($entity);
+        return true;
+    }
 }

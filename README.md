@@ -172,6 +172,10 @@ You can dump client certificates and private keys using
 ```bash
 app/console zim:cert:dump -p {secure_word} {identity}
 ```
+You can remove certificate from storage
+```bash
+ app/console zim:cert:remove {identity}
+```
 
 ## How to add custom fields
 

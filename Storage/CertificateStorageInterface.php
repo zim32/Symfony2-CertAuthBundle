@@ -29,4 +29,10 @@ interface CertificateStorageInterface
      */
     public function has($identity);
 
+    /**
+     * @param $identity
+     * @return bool
+     */
+    public function remove($identity);
+
 }

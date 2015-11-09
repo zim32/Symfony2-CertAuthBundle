@@ -91,4 +91,13 @@ class CertificateStorage implements CertificateStorageInterface
         return $result;
     }
 
+    /**
+     * @param $identity
+     * @return bool
+     * @throws CertificateNotFoundException
+     */
+    public function remove($identity)
+    {
+        return $this->persister->remove($identity);
+    }
 }

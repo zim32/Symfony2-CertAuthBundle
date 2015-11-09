@@ -62,4 +62,24 @@ class LocalFilesystemPersister implements CertificatePersisterInterface
         $item->setBinaryContent(file_get_contents($res[0]));
     }
 
+    /**
+     * @param $identity
+     * @return bool
+     * @throws CertificateNotFoundException
+     */
+    public function remove($identity)
+    {
+        $fileGlob = rtrim($this->options['rootDir'], '/').'/'.$identity.'.*';
+        $res = glob($fileGlob);
+
+        if (count($res) === 0) {
+            throw new CertificateNotFoundException;
+        }
+
+        if (count($res) > 1) {
+            throw new \LogicException('More then one certificate found.');
+        }
+
+        return unlink($res[0]);
+    }
 }
