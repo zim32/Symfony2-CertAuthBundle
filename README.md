@@ -38,7 +38,6 @@ Certificates are protected by password and even your admin can not view it's con
 [Using Command Line](#using-command-line)<br/>
 [How to add custom fields](#how-to-add-custom-fields)<br/>
 <br/>
-<br/>
 ## Installation
 
 **Download via composer**
@@ -61,7 +60,7 @@ zim_cert_auth:
     resource: "@ZimCertAuthBundle/Resources/config/routing.yml"
     prefix:   /cert
 ```
-**Generate youe CA certificate (if you don't have one)**
+**Generate CA certificate (if you don't have one)**
 ```bash
 mkdir /{your_app_root}/cert
 cd /{your_app_root}/cert
@@ -142,10 +141,11 @@ firewalls:
 ```
 ## Customize
 
-This bundle has only three templates 
+This bundle has four templates:
  - Resources/views/Denied/layout.html.twig
  - Resources/views/Denied/index.html.twig
  - Resources/views/Denied/restore.html.twig
+ - Resources/views/Denied/blocked.html.twig
 
 Override them using [Symfony Override Templates](http://symfony.com/doc/current/book/templating.html#overriding-bundle-templates) technique to add f.e. instructions how to install certificate into the browser.
 

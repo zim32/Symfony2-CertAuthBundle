@@ -34,6 +34,9 @@ class AccessDeniedController extends Controller
     {
         $error = '';
         $token = $this->get('security.token_storage')->getToken();
+        if($this->get('service_container')->getParameter('zim_cert_auth.disable_cert_restore')){
+            return $this->blockedAction($request);
+        }
 
         $certStorage = $this->get('zim_cert_auth.certificate_storage');
         if (!$certStorage->has($token->getUsername())) {
@@ -50,6 +53,11 @@ class AccessDeniedController extends Controller
         }
 
         return $this->render('ZimCertAuthBundle:Denied:restore.html.twig', ['error' => $error]);
+    }
+
+    public function blockedAction(Request $request)
+    {
+        return $this->render('ZimCertAuthBundle:Denied:blocked.html.twig');
     }
 
     protected function generateCertificate($password)

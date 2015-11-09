@@ -45,6 +45,8 @@ class ZimCertAuthExtension extends Extension
                 ->addMethodCall('setExpression', [$config['cert_validation_expression']]);
         }
 
+        $container->setParameter('zim_cert_auth.disable_cert_restore', $config['disable_cert_restore']);
+
         $listenerDef = $container->getDefinition('zim_cert_auth.security.authentication.listener');
         $listenerDef->addMethodCall('setEnvCertificateContent', [$config['cert_content_server_var']]);
         $listenerDef->addMethodCall('setCustomOIDs', [$config['custom_oids']]);
