@@ -32,14 +32,13 @@ What if user go to another computer?
 
 Certificates are protected by password and even your admin can not view it's content.
 ## Contents
-###### [Installation](#installation)
-###### [Customize](#customize)
-###### [Run Tests](#run-tests)
-###### [Using Command Line](#using-command-line)
-###### [How to add custom fields](#how-to-add-custom-fields)
-##
-##
-
+[Installation](#installation)<br/>
+[Customize](#customize)<br/>
+[Run Tests](#run-tests)<br/>
+[Using Command Line](#using-command-line)<br/>
+[How to add custom fields](#how-to-add-custom-fields)<br/>
+<br/>
+<br/>
 ## Installation
 
 **Download via composer**
