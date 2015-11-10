@@ -33,6 +33,7 @@ What if user go to another computer?
 Certificates are protected by password and even your admin can not view it's content.
 ## Contents
 [Installation](#installation)<br/>
+[Configuration reference](#configuration-reference)<br/>
 [Customize](#customize)<br/>
 [Disable automatic certificate recovery](#disable-automatic-certificate-recovery)<br />
 [Run Tests](#run-tests)<br/>
@@ -140,6 +141,10 @@ firewalls:
         - { path: ^/cert/denied, role: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, allow_if: "'ROLE_ADMIN' in roles and 'ROLE_CERT_AUTHENTICATED_FULLY' in roles" }
 ```
+
+## Configuration reference
+See [documentation](./DOCUMENTATION.md)
+
 ## Customize
 
 This bundle has four templates:
