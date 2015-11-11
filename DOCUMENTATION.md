@@ -74,4 +74,18 @@ cert_storage_persister:
     id: zim_cert_auth.certificate_storage.persister.orm
     options: []
 ```
+
+**When using zim_cert_auth.certificate_storage.persister.orm persister add this to config.yml:**
+```yml
+doctrine:
+    orm:
+        mappings:
+            ...
+            zim_cert:
+                type: annotation
+                prefix: Zim\CertAuthBundle\Storage\Entity
+                dir: "%kernel.root_dir%/../vendor/zim32/cert-auth-bundle/Storage/Entity"
+                is_bundle: false
+```
+
 You can implement your own persister. See [source code](https://github.com/zim32/Symfony2-CertAuthBundle/blob/master/Storage/Persister/CertificatePersisterInterface.php).
